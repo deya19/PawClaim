@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.next/
+.expo/
+coverage/
+*.tsbuildinfo
+
+# Env files (secrets come from the environment / secret manager)
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+*.log
