@@ -1,0 +1,36 @@
+// PawClaim database schema (Supabase Postgres).
+// Tables and columns are snake_case in Postgres (@@map / @map) and camelCase in TypeScript.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Answer to "Would you pay for PawClaim?" on the waitlist form.
+enum WaitlistPriceAnswer {
+  yes_399_month
+  yes_29_year
+  maybe
+  no
+
+  @@map("waitlist_price_answer")
+}
+
+/// One waitlist signup. Writes come only from the server (RLS enabled, no public policies).
+model WaitlistSignup {
+  id          String              @id @default(uuid(7)) @db.Uuid
+  /// Stored lower-cased (enforced by a CHECK constraint in the migration).
+  email       String              @unique
+  priceAnswer WaitlistPriceAnswer @map("price_answer")
+  insurer     String?
+  petCount    Int?                @map("pet_count")
+  /// UTM source / referrer.
+  source      String?
+  createdAt   DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("waitlist_signups")
+}
